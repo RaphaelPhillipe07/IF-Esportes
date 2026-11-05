@@ -1,0 +1,354 @@
+IF ESPORTES — ROTEIRO PROVISÓRIO DE TESTES DAS TELAS
+=====================================================
+Guia provisório para validação do protótipo.
+Gerado em: 04/11/2026
+Projeto: Plataforma de Esportes e Gestão Atlética do IFAL Campus Maceió
+
+COMO TESTAR
+-----------
+1. O preview já está no ar em: http://localhost:4173
+2. Se precisar subir novamente:
+      npm run build
+      npm run preview
+   Para desenvolvimento: npm run dev  ->  http://localhost:5173
+3. A galeria com todas as telas é o índice clicável: http://localhost:4173/galeria
+4. O projeto está compilando sem erros (npm run typecheck OK).
+
+
+1. PÚBLICO (SEM LOGIN)
+----------------------
+#   Página                      Rota
+01  Home                        /
+02  Catálogo de modalidades     /modalidades
+03  Detalhe da modalidade       /modalidades/natacao
+04  Solicitação de vaga         /modalidades/natacao/inscricao
+05  Torneios                    /torneios
+06  Detalhe do torneio          /torneios/jogos-internos-2026
+07  Notícias e editais          /noticias
+
+O que testar em cada uma:
+01  Home — hero, destaques, próximos torneios, notícias; links do menu e do rodapé.
+02  Catálogo — busca, filtros por categoria/local/dia, estado vazio da busca, cards lotados.
+03  Detalhe da modalidade — abas/horários, turmas, vagas, pré-requisitos, professor; CTA de inscrição.
+04  Solicitação de vaga — stepper, troca de turma, validação, conflito de horário, tela de confirmação.
+05  Torneios — filtros por status, destaque, calendário.
+06  Detalhe do torneio — chaves, classificação, resultados, regulamento.
+07  Notícias e editais — destaque, filtros, âncoras das notícias, editais/anexos.
+
+Casos de borda do público:
+- /modalidades/futsal  -> modalidade LOTADA (o CTA deve levar de volta ao catálogo)
+- Turma B de natação   -> estado de ÚLTIMAS VAGAS
+- /modalidades/qualquer-coisa -> deve cair no 404
+- Outros slugs válidos: voleibol, basquete, atletismo, judo, xadrez, handebol, volei-de-praia
+- Torneios válidos: copa-das-atleticas-2026, torneio-natacao-2026,
+  liga-futsal-2026-2, circuito-corrida-2026
+
+
+2. ACESSO
+---------
+#   Página                      Rota
+08  Entrar / criar conta        /entrar
+09  Verificação OTP             /verificar
+
+O que testar:
+08  Entrar — alternância login/cadastro (?tab=cadastro), validação de e-mail
+    institucional, mensagens de erro.
+09  Verificação OTP — 6 dígitos, reenvio, contagem, estados de erro/sucesso.
+
+
+3. ALUNO-ATLETA
+---------------
+#   Página                      Rota
+10  Dashboard do aluno          /app
+11  Minhas inscrições           /app/inscricoes
+12  Passaporte esportivo        /app/atleta
+
+O que testar:
+10  Dashboard — próximo treino, modalidades ativas, avisos, atalhos.
+11  Minhas inscrições — status, frequência, FILA DE ESPERA, cancelamento e confirmação.
+12  Passaporte — linha do tempo, medalhas, histórico, frequência.
+
+
+4. ATLÉTICA
+-----------
+#   Página                      Rota
+13  Painel da atlética          /gestao
+14  Equipes e atletas           /gestao/equipes
+15  Gestão de torneio           /gestao/torneios/jogos-internos-2026
+
+O que testar:
+13  Painel — indicadores, homologações (aprovar/recusar), próximos jogos.
+14  Equipes — troca de equipe, elenco, frequência, vínculos.
+15  Gestão de torneio — chaves, LANÇAMENTO DE RESULTADO, inscrições, configurações.
+
+
+5. COORDENAÇÃO / ADMIN
+----------------------
+#   Página                      Rota
+16  Painel administrativo       /admin
+17  Modalidades e turmas        /admin/modalidades
+18  Relatórios e auditoria      /admin/relatorios
+
+O que testar:
+16  Painel — indicadores, ocupação, homologações, saúde do sistema.
+17  Modalidades e turmas — catálogo, capacidade, abertura de turma, ocupação.
+18  Relatórios — gráficos, EXPORTAÇÃO CSV/PDF, log de ações.
+
+
+EXTRAS
+------
+Galeria  — /galeria            -> atalhos para as 18 telas e os 8 wireframes.
+404      — /rota-inexistente   -> página de erro e caminho de volta.
+
+
+ROTEIRO RÁPIDO SUGERIDO (5 FLUXOS)
+----------------------------------
+1. Visitante: Home -> Modalidades -> Natação -> solicitar vaga -> confirmação.
+2. Aluno: Entrar -> OTP -> Dashboard -> Minhas inscrições -> cancelar/fila -> Passaporte.
+3. Atlética: Painel -> homologar inscrição -> Equipes -> Gestão do torneio -> lançar resultado.
+4. Admin: Painel -> Modalidades/turmas (abrir turma) -> Relatórios -> exportar.
+5. Responsividade: repetir Home, catálogo e dashboard em ~360 px e em 1920 px;
+   conferir menu mobile, tabelas com scroll e foco por teclado.
+
+
+PONTOS QUE COSTUMAM DEMANDAR AJUSTE (OLHAR COM ATENÇÃO)
+-------------------------------------------------------
+- Textos e valores dos dados mockados (nomes de professores, horários, vagas)
+  — troca fácil em src/data/mock.ts.
+- Regras de negócio: conflito de horário, lotação, fila de espera e homologação
+  (RN-01 a RN-05 em docs/01-requisitos.md).
+- Exportações CSV/PDF e lançamento de resultados, que no protótipo são simulados.
+- Navegação entre perfis: não há login real, então as áreas /app, /gestao e /admin
+  são acessíveis direto pela URL — confirmar se isso é aceitável na demonstração.
+
+
+OBSERVAÇÕES
+-----------
+- Este é um guia provisório; ajustar após as sessões de validação.
+- Registrar cada sessão em um arquivo próprio neste diretório
+  (ex.: 2026-11-10-sessao-01.md), seguindo a ficha de docs/validacao/README.md.
+- Remover qualquer dado pessoal identificável dos registros.
+
+
+================================================================
+ANEXO — REQUISITOS DO PROJETO ATUAL
+================================================================
+Extraído de docs/01-requisitos.md (v1.0 · 04/11/2026).
+Numeração original do TAP preservada: RF-01 a RF-09, RNF-01 a RNF-12.
+Legenda de prioridade (MoSCoW): M = Must (MVP) · S = Should ·
+C = Could · W = Won't neste semestre.
+A coluna "Telas" refere-se à numeração deste roteiro (01 a 18).
+
+
+A. REQUISITOS FUNCIONAIS (RF)
+-----------------------------
+
+RF-01 — AUTENTICAÇÃO E PERFIS
+  RF-01.1  Autocadastro com nome completo, CPF, matrícula/SIAPE,
+           e-mail institucional e senha.                        [M] Telas 08
+           Critério: CPF único e e-mail @aluno.ifal.edu.br ou
+           @ifal.edu.br; erros por campo.
+  RF-01.2  Validação do e-mail por código OTP de 6 dígitos.      [M] Tela 09
+           Critério: envio em até 1 min, validade de 10 min,
+           reenvio e limite de tentativas.
+  RF-01.3  Login, logout e recuperação de senha.                 [M] Tela 08
+           Critério: sessão por token; recuperação invalida o
+           código/link anterior.
+  RF-01.4  Controle de acesso por papéis (RBAC).                 [M] Telas 13–18
+           Critério: aluno não acessa rotas de atlética/coordenação;
+           permissões elevadas só pelo Administrador.
+  RF-01.5  Perfil do usuário e consentimento LGPD.               [M] Telas 08, 12
+           Critério: usuário vê/edita dados permitidos; consentimento
+           registrado com data e versão.
+  Regras associadas: RN-04, RN-05.
+
+RF-02 — CATÁLOGO DE MODALIDADES
+  RF-02.1  Listar modalidades ativas.                            [M] Telas 01, 02
+           Critério: nome, categoria, local, dias, horários,
+           instrutor e status.
+  RF-02.2  Filtrar por categoria, local, dia e disponibilidade.  [M] Tela 02
+           Critério: filtros combinam entre si e limpam em um clique.
+  RF-02.3  Exibir detalhe da modalidade.                         [M] Tela 03
+           Critério: descrição, turmas, vagas, pré-requisitos,
+           equipamentos e professor.
+  RF-02.4  Exibir locais e horários dos espaços.                 [S] Telas 03, 17
+           Critério: cada turma informa local e faixa de horário;
+           conflito de espaço sinalizado à coordenação.
+  RF-02.5  Exibir status de vagas em tempo real.                 [M] Telas 02, 03
+           Critério: ao lotar, turma muda para "lotada" e oferece
+           fila de espera.
+
+RF-03 — INSCRIÇÃO EM TURMAS
+  RF-03.1  Solicitar vaga em uma turma.                          [M] Tela 04
+           Critério: aluno autenticado escolhe turma, aceita o
+           regulamento e recebe protocolo.
+  RF-03.2  Validar capacidade máxima.                            [M] Telas 03, 04
+           Critério: bloqueia acima da capacidade e oferece fila.
+  RF-03.3  Gerenciar fila de espera.                             [M] Telas 10, 11
+           Critério: posição visível; promoção automática com prazo
+           de confirmação.
+  RF-03.4  Bloquear conflito de dia e horário.                   [M] Tela 04
+           Critério: impede duas modalidades no mesmo dia/horário,
+           com mensagem explicativa.
+  RF-03.5  Cancelar solicitação/inscrição.                       [S] Tela 11
+           Critério: libera a vaga e registra o motivo; prazo mínimo
+           de 24h antes do encontro.
+  RF-03.6  Acompanhar status da solicitação.                     [M] Telas 10, 11
+           Critério: pendente, ativa, fila, concluída, cancelada;
+           reflete em até 5 s.
+  RF-03.7  Emitir comprovante de inscrição.                      [C] Tela 11
+           Critério: PDF/print com modalidade, turma, horário,
+           local e protocolo.
+  Regras associadas: RN-01, RN-02, RN-06.
+
+RF-04 — TORNEIOS E EVENTOS
+  RF-04.1  Listar torneios e eventos.                            [M] Tela 05
+           Critério: período, local, status, nº de equipes/jogos
+           e filtros.
+  RF-04.2  Exibir detalhe com chaves, classificação e resultados.[M] Tela 06
+           Critério: abas de visão geral, chaves, classificação,
+           resultados e regulamento.
+  RF-04.3  Criar e editar torneio (atlética/coordenação).        [M] Tela 15
+           Critério: nome, modalidade, período, local, formato e
+           prazo de inscrição.
+  RF-04.4  Inscrever equipes e atletas.                          [M] Telas 14, 15
+           Critério: atleta só em uma equipe por modalidade.
+  RF-04.5  Lançar e homologar resultados.                        [M] Tela 15
+           Critério: resultado homologado não é editado sem
+           justificativa registrada em log.
+  RF-04.6  Calcular classificação automaticamente.               [S] Tela 06
+           Critério: pontos, saldo e desempate após homologação.
+  RF-04.7  Publicar regulamento e documentos.                    [S] Telas 05, 06
+           Critério: anexos disponíveis para download.
+  Regras associadas: RN-03, RN-05, RN-06.
+
+RF-05 — PERFIL DO ALUNO-ATLETA (PASSAPORTE ESPORTIVO)
+  RF-05.1  Exibir dados esportivos do estudante.                 [M] Tela 12
+           Critério: nome, matrícula, curso, modalidades ativas
+           e desde quando pratica.
+  RF-05.2  Exibir histórico de torneios.                         [M] Tela 12
+           Critério: lista cronológica com torneio, modalidade,
+           resultado e data.
+  RF-05.3  Exibir medalhas e conquistas.                         [M] Tela 12
+           Critério: contagem por tipo e detalhe do evento.
+  RF-05.4  Exibir frequência por modalidade.                     [M] Telas 10, 11, 12
+           Critério: percentual por turma, alerta abaixo de 75%.
+  RF-05.5  Exibir estatísticas básicas.                          [S] Tela 12
+           Critério: treinos, provas, pódios e participação.
+  RF-05.6  Compartilhar/exportar o passaporte.                   [C] Tela 12
+           Critério: link público somente leitura ou PDF.
+
+RF-06 — NOTÍCIAS E EDITAIS
+  RF-06.1  Listar notícias, editais e comunicados.               [M] Telas 01, 07
+           Critério: ordenação por data, filtro por categoria e busca.
+  RF-06.2  Exibir detalhe da publicação.                         [M] Tela 07
+           Critério: título, data, autor, conteúdo, anexos e links.
+  RF-06.3  Publicar conteúdo (atlética/coordenação).             [M] Telas 07, 13
+           Critério: rascunho, publicação e destaque com autoria.
+  RF-06.4  Destacar publicação na home.                          [S] Tela 01
+           Critério: no máximo 1 destaque principal por vez.
+  RF-06.5  Anexar editais em PDF.                                [S] Telas 06, 07
+           Critério: download disponível e link validado.
+
+RF-07 — RELATÓRIOS DA COORDENAÇÃO
+  RF-07.1  Lista de inscritos por esporte/turma.                  [M] Telas 16, 18
+           Critério: filtro por modalidade, turma e período; totais
+           conferem com a base.
+  RF-07.2  Relatório de ocupação de horários.                    [M] Telas 16, 18
+           Critério: percentual por faixa de horário e por espaço.
+  RF-07.3  Relatório de fila de espera.                          [S] Tela 18
+           Critério: posição, tempo de espera e status.
+  RF-07.4  Indicadores gerais.                                   [S] Tela 16
+           Critério: inscrições, ocupação média, atléticas ativas
+           e pendências.
+
+RF-08 — EXPORTAÇÃO DE DADOS
+  RF-08.1  Exportar CSV.                                         [M] Tela 18
+           Critério: cabeçalho, separador compatível com Excel e
+           dados do período.
+  RF-08.2  Exportar PDF.                                         [S] Tela 18
+           Critério: título, período, totais e data de geração.
+  RF-08.3  Restringir e auditar exportações.                     [M] Tela 18
+           Critério: apenas coordenação/admin exporta; ação em log.
+
+RF-09 — BUSCA E FILTROS
+  RF-09.1  Busca textual em modalidades, torneios e notícias.    [M] Telas 02, 05, 07
+           Critério: nome, local, professor e termos parciais, sem
+           diferenciar maiúsculas.
+  RF-09.2  Filtros combináveis.                                  [M] Telas 02, 05, 07
+           Critério: estado dos filtros visível e limpável.
+  RF-09.3  Ordenação de resultados.                              [C] Telas 02, 05
+           Critério: por relevância, data, nome e vagas.
+
+REQUISITOS SUGERIDOS PARA A PRÓXIMA REVISÃO DO TAP
+  RF-10  Notificações transacionais e central de avisos.         [S]
+         OTP, confirmação de inscrição, promoção da fila e
+         resultado homologado.
+  RF-11  Registro de presença/check-in por turma.                [S]
+         Sustenta a frequência do passaporte e a regra de 75%.
+  RF-12  Auditoria de ações administrativas.                     [S]
+         Já prevista na EAP e na RN-03; requer tela e exportação.
+
+MVP (Must): RF-01.1–01.4, RF-02.1–02.3, RF-03.1–03.4,
+RF-04.1–04.5, RF-05.1–05.4, RF-06.1–06.3, RF-07.1–07.2,
+RF-08.1, RF-09.1–09.2.
+
+
+B. REQUISITOS NÃO FUNCIONAIS (RNF)
+----------------------------------
+
+  RNF-01  Desempenho
+          p95 < 2 s em rede institucional; API < 500 ms para
+          consultas simples.
+          Verificação: Lighthouse, logs de APM, teste de carga k6.
+
+  RNF-02  Usabilidade
+          Encontrar modalidade ou torneio em até 3 cliques.
+          Verificação: teste com 5 usuários e contagem de cliques.
+
+  RNF-03  Segurança
+          Argon2id/BCrypt, JWT, HTTPS, proteção contra SQLi/XSS/CSRF,
+          rate limit no login.
+          Verificação: revisão de código, OWASP ZAP, testes de auth.
+
+  RNF-04  Disponibilidade
+          99,5% no horário acadêmico (07h–22h), sem travamentos.
+          Verificação: monitoramento sintético e alertas.
+
+  RNF-05  Backup
+          Diário, RPO 24h, RTO 4h, restauração testada e registrada.
+          Verificação: simulação de restore trimestral.
+
+  RNF-06  Acessibilidade (sugerido)
+          WCAG 2.1 AA / eMAG: contraste >= 4,5:1, foco visível,
+          navegação por teclado, alt text.
+          Verificação: axe DevTools, teste manual com teclado/leitor.
+
+  RNF-07  Responsividade
+          360 px a 1920 px, sem scroll horizontal.
+          Verificação: teste em 360, 390, 768, 1024 e 1440 px.
+
+  RNF-08  Compatibilidade
+          Chrome, Firefox e Edge (últimas 2 versões).
+          Verificação: matriz de testes manuais.
+
+  RNF-09  Privacidade/LGPD (sugerido)
+          Minimização, consentimento, retenção definida e relatórios
+          anonimizados.
+          Verificação: revisão de dados e política de privacidade.
+
+  RNF-10  Observabilidade (sugerido)
+          Logs estruturados, correlation id, métricas de erro e alertas.
+          Verificação: painel de logs e alertas.
+
+  RNF-11  Manutenibilidade (sugerido)
+          Cobertura >= 70% nas regras de negócio, lint e tipagem estrita.
+          Verificação: CI e relatório de cobertura.
+
+  RNF-12  SEO das páginas públicas (sugerido)
+          Título, descrição, Open Graph e sitemap.
+          Verificação: Lighthouse SEO.
+
+Observação: (sugerido) indica requisito ainda não aprovado no TAP.
+Detalhes completos, regras de negócio (RN-01 a RN-08), histórias de
+usuário e critérios em Gherkin estão em docs/01-requisitos.md.

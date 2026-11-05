@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64" role="img" aria-label="IF Esportes">
+  <rect x="0" y="4" width="56" height="56" rx="14" fill="#0A4B2C"/>
+  <path d="M15 18h6v28h-6z" fill="#FFFFFF"/>
+  <path d="M26 18h14v5.5h-8v5h7v5.5h-7V46h-6z" fill="#FFFFFF"/>
+  <circle cx="46" cy="16" r="4.2" fill="#C6F135"/>
+  <text x="70" y="41" font-family="Archivo, Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#0A4B2C">IF</text>
+  <text x="103" y="41" font-family="Archivo, Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#0B1210">Esportes</text>
+</svg>

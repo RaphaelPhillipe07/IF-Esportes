@@ -1,0 +1,33 @@
+# Dependências e build
+node_modules
+dist
+dist-ssr
+*.tsbuildinfo
+.vite
+
+# Variáveis de ambiente e arquivos locais
+.env
+.env.*
+!.env.example
+*.local
+
+# Exportações geradas (PNG para o Figma e relatórios de teste)
+design/exports
+playwright-report
+test-results
+coverage
+*.log
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Ferramentas locais / agentes
+.reasonix
+
+# Deploy
+.vercel
+.netlify
